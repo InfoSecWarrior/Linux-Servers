@@ -247,12 +247,12 @@ vim  /root/ldif/db-config.ldif
 dn: olcDatabase={2}mdb,cn=config
 changetype: modify
 replace: olcSuffix
-olcSuffix: dc=rs,dc=local
+olcSuffix: dc=armour,dc=local
 
 dn: olcDatabase={2}mdb,cn=config
 changetype: modify
 replace: olcRootDN
-olcRootDN: cn=admin,dc=rs,dc=local
+olcRootDN: cn=admin,dc=armour,dc=local
 
 dn: olcDatabase={2}mdb,cn=config
 changetype: modify
@@ -300,13 +300,13 @@ add: olcAccess
 olcAccess: {0}to attrs=userPassword
   by self write
   by anonymous auth
-  by dn="cn=admin,dc=rs,dc=local" write
+  by dn="cn=admin,dc=armour,dc=local" write
   by * none
 olcAccess: {1}to attrs=shadowLastChange
   by self write
   by * read
 olcAccess: {2}to *
-  by dn="cn=admin,dc=rs,dc=local" write
+  by dn="cn=admin,dc=armour,dc=local" write
   by self read
   by * read
 ```
@@ -330,25 +330,25 @@ ldapsearch -Y EXTERNAL -H ldapi:/// -b "olcDatabase={2}mdb,cn=config" olcAccess
 --------------------------------------------------------------------------------
 
 #### 6.5.1 Base LDAP Entry
-• Establishes the top-level domain entry "dc=rs,dc=local."
+• Establishes the top-level domain entry "dc=armour,dc=local."
 
 ```
 vim /root/ldif/base.ldif
 ```
 ```ldif
-dn: dc=rs,dc=local
+dn: dc=armour,dc=local
 objectClass: top
 objectClass: dcObject
 objectClass: organization
-o: RS
-dc: rs
+o: Armour
+dc: armour
 ```
 
 #### 6.5.2 Add Base Domain to LDAP
 • Adds the new base domain into the LDAP database.
 
 ```
-ldapadd -x -D "cn=admin,dc=rs,dc=local" -W -f /root/ldif/base.ldif
+ldapadd -x -D "cn=admin,dc=armour,dc=local" -W -f /root/ldif/base.ldif
 ```
 
 --------------------------------------------------------------------------------
@@ -362,19 +362,19 @@ ldapadd -x -D "cn=admin,dc=rs,dc=local" -W -f /root/ldif/base.ldif
 vim /root/ldif/base_structure.ldif
 ```
 ```ldif
-dn: ou=it,dc=rs,dc=local
+dn: ou=it,dc=armour,dc=local
 objectClass: organizationalUnit
 ou: it
 
-dn: ou=hr,dc=rs,dc=local
+dn: ou=hr,dc=armour,dc=local
 objectClass: organizationalUnit
 ou: hr
 
-dn: ou=admin,dc=rs,dc=local
+dn: ou=admin,dc=armour,dc=local
 objectClass: organizationalUnit
 ou: admin
 
-dn: ou=groups,dc=rs,dc=local
+dn: ou=groups,dc=armour,dc=local
 objectClass: organizationalUnit
 ou: groups
 ```
@@ -383,7 +383,7 @@ ou: groups
 • Loads the OU entries into the LDAP directory.
 
 ```
-ldapadd -x -D "cn=admin,dc=rs,dc=local" -W -f /root/ldif/base_structure.ldif
+ldapadd -x -D "cn=admin,dc=armour,dc=local" -W -f /root/ldif/base_structure.ldif
 ```
 
 --------------------------------------------------------------------------------
@@ -391,23 +391,23 @@ ldapadd -x -D "cn=admin,dc=rs,dc=local" -W -f /root/ldif/base_structure.ldif
 --------------------------------------------------------------------------------
 
 #### 6.7.1 Group Configuration
-• Defines posixGroups under "ou=groups,dc=rs,dc=local."
+• Defines posixGroups under "ou=groups,dc=armour,dc=local."
 
 ```
 vim /root/ldif/create_group.ldif
 ```
 ```ldif
-dn: cn=it,ou=groups,dc=rs,dc=local
+dn: cn=it,ou=groups,dc=armour,dc=local
 objectClass: posixGroup
 cn: it
 gidNumber: 2004
 
-dn: cn=hr,ou=groups,dc=rs,dc=local
+dn: cn=hr,ou=groups,dc=armour,dc=local
 objectClass: posixGroup
 cn: hr
 gidNumber: 2005
 
-dn: cn=admin,ou=groups,dc=rs,dc=local
+dn: cn=admin,ou=groups,dc=armour,dc=local
 objectClass: posixGroup
 cn: admin
 gidNumber: 2003
@@ -417,7 +417,7 @@ gidNumber: 2003
 • Inserts the group definitions into the LDAP database.
 
 ```
-ldapadd -x -D "cn=admin,dc=rs,dc=local" -W -f /root/ldif/create_group.ldif
+ldapadd -x -D "cn=admin,dc=armour,dc=local" -W -f /root/ldif/create_group.ldif
 ```
 
 --------------------------------------------------------------------------------
@@ -438,7 +438,7 @@ slappasswd
 vim /root/ldif/add_users.ldif
 ```
 ```ldif
-dn: uid=hr1,ou=hr,dc=rs,dc=local
+dn: uid=hr1,ou=hr,dc=armour,dc=local
 objectClass: inetOrgPerson
 objectClass: posixAccount
 cn: HR One
@@ -450,7 +450,7 @@ homeDirectory: /home/hr1
 loginShell: /bin/bash
 userPassword: {SSHA}8ZFc/mjJqAzQ0Oeebegd7XX4aXfj6riI
 
-dn: uid=hr2,ou=hr,dc=rs,dc=local
+dn: uid=hr2,ou=hr,dc=armour,dc=local
 objectClass: inetOrgPerson
 objectClass: posixAccount
 cn: HR Two
@@ -462,7 +462,7 @@ homeDirectory: /home/hr2
 loginShell: /bin/bash
 userPassword: {SSHA}8ZFc/mjJqAzQ0Oeebegd7XX4aXfj6riI
 
-dn: uid=it1,ou=it,dc=rs,dc=local
+dn: uid=it1,ou=it,dc=armour,dc=local
 objectClass: inetOrgPerson
 objectClass: posixAccount
 cn: IT One
@@ -474,7 +474,7 @@ homeDirectory: /home/it1
 loginShell: /bin/bash
 userPassword: {SSHA}8ZFc/mjJqAzQ0Oeebegd7XX4aXfj6riI
 
-dn: uid=it2,ou=it,dc=rs,dc=local
+dn: uid=it2,ou=it,dc=armour,dc=local
 objectClass: inetOrgPerson
 objectClass: posixAccount
 cn: IT Two
@@ -486,7 +486,7 @@ homeDirectory: /home/it2
 loginShell: /bin/bash
 userPassword: {SSHA}8ZFc/mjJqAzQ0Oeebegd7XX4aXfj6riI
 
-dn: uid=admin1,ou=admin,dc=rs,dc=local
+dn: uid=admin1,ou=admin,dc=armour,dc=local
 objectClass: inetOrgPerson
 objectClass: posixAccount
 cn: Admin One
@@ -498,7 +498,7 @@ homeDirectory: /home/admin1
 loginShell: /bin/bash
 userPassword: {SSHA}8ZFc/mjJqAzQ0Oeebegd7XX4aXfj6riI
 
-dn: uid=admin2,ou=admin,dc=rs,dc=local
+dn: uid=admin2,ou=admin,dc=armour,dc=local
 objectClass: inetOrgPerson
 objectClass: posixAccount
 cn: Admin Two
@@ -515,7 +515,7 @@ userPassword: {SSHA}8ZFc/mjJqAzQ0Oeebegd7XX4aXfj6riI
 • Loads the defined users into the LDAP directory.
 
 ```
-ldapadd -x -D "cn=admin,dc=rs,dc=local" -W -f /root/ldif/add_users.ldif
+ldapadd -x -D "cn=admin,dc=armour,dc=local" -W -f /root/ldif/add_users.ldif
 ```
 
 --------------------------------------------------------------------------------
@@ -526,14 +526,14 @@ ldapadd -x -D "cn=admin,dc=rs,dc=local" -W -f /root/ldif/add_users.ldif
 • Searches the entire domain for any objectClass, verifying read access.
 
 ```
-ldapsearch -x -D "cn=admin,dc=rs,dc=local" -W -b "dc=rs,dc=local" "(objectClass=*)"
+ldapsearch -x -D "cn=admin,dc=armour,dc=local" -W -b "dc=armour,dc=local" "(objectClass=*)"
 ```
 
 #### 6.9.2 Test User Authentication
 • Checks that a specific LDAP user (it1) can authenticate using the supplied credentials.
 
 ```
-ldapwhoami -x -D "uid=it1,ou=it,dc=rs,dc=local" -W
+ldapwhoami -x -D "uid=it1,ou=it,dc=armour,dc=local" -W
 ```
 
 --------------------------------------------------------------------------------
@@ -547,19 +547,19 @@ ldapwhoami -x -D "uid=it1,ou=it,dc=rs,dc=local" -W
 vim /root/ldif/add_member_to_group.ldif
 ```
 ```ldif
-dn: cn=it,ou=groups,dc=rs,dc=local
+dn: cn=it,ou=groups,dc=armour,dc=local
 changetype: modify
 add: memberUid
 memberUid: it1
 memberUid: it2
 
-dn: cn=hr,ou=groups,dc=rs,dc=local
+dn: cn=hr,ou=groups,dc=armour,dc=local
 changetype: modify
 add: memberUid
 memberUid: hr1
 memberUid: hr2
 
-dn: cn=admin,ou=groups,dc=rs,dc=local
+dn: cn=admin,ou=groups,dc=armour,dc=local
 changetype: modify
 add: memberUid
 memberUid: admin1
@@ -570,14 +570,14 @@ memberUid: admin2
 • Modifies existing groups in the LDAP directory to reference the new users.
 
 ```
-ldapmodify -x -D "cn=admin,dc=rs,dc=local" -W -f /root/ldif/add_member_to_group.ldif
+ldapmodify -x -D "cn=admin,dc=armour,dc=local" -W -f /root/ldif/add_member_to_group.ldif
 ```
 
 #### 6.10.3 Verify Group Membership
 • Searches for all posixGroup objects to confirm the users were added.
 
 ```
-ldapsearch -x -D "cn=admin,dc=rs,dc=local" -W -b "ou=groups,dc=rs,dc=local" "(objectClass=posixGroup)"
+ldapsearch -x -D "cn=admin,dc=armour,dc=local" -W -b "ou=groups,dc=armour,dc=local" "(objectClass=posixGroup)"
 ```
 
 --------------------------------------------------------------------------------
@@ -612,21 +612,21 @@ ldapmodify -Y EXTERNAL -H ldapi:/// -f /root/ldif/logging.ldif
 • Verifies that the LDAP admin DN can bind successfully.
 
 ```
-ldapwhoami -x -D "cn=admin,dc=rs,dc=local" -W
+ldapwhoami -x -D "cn=admin,dc=armour,dc=local" -W
 ```
 
 #### 6.12.2 Search All Entries
 • Ensures the LDAP directory is accessible under the admin credentials.
 
 ```
-ldapsearch -x -D "cn=admin,dc=rs,dc=local" -W -b "dc=rs,dc=local" "(objectClass=*)"
+ldapsearch -x -D "cn=admin,dc=armour,dc=local" -W -b "dc=armour,dc=local" "(objectClass=*)"
 ```
 
 #### 6.12.3 Test User Authentication (it1)
 • Checks user-level authentication once more.
 
 ```
-ldapwhoami -x -D "uid=it1,ou=it,dc=rs,dc=local" -W
+ldapwhoami -x -D "uid=it1,ou=it,dc=armour,dc=local" -W
 ```
 
 #### 6.12.4 View Logs
@@ -641,7 +641,7 @@ journalctl -u slapd -f
 --------------------------------------------------------------------------------
 
 ```
-dc=rs,dc=local
+dc=armour,dc=local
 ├── ou=hr
 │   ├── uid=hr1 (member of hr group)
 │   └── uid=hr2 (member of hr group)
@@ -713,15 +713,15 @@ domains = armour.local
 id_provider = ldap
 auth_provider = ldap
 ldap_uri = ldap://centos.armour.local:389
-ldap_search_base = dc=rs,dc=local
+ldap_search_base = dc=armour,dc=local
 ldap_schema = rfc2307
 ldap_tls_reqcert = never
 ldap_auth_disable_tls_never_use_in_production = true
 ldap_id_use_start_tls = false
 cache_credentials = true
 enumerate = true
-ldap_default_bind_dn = cn=admin,dc=rs,dc=local
-ldap_default_authtok = Rish@bh123
+ldap_default_bind_dn = cn=admin,dc=armour,dc=local
+ldap_default_authtok = @rmour123
 
 [nss]
 homedir_substring = /home
@@ -829,7 +829,7 @@ it:x:2004:it1,it2
 • Uses the ldapsearch tool to confirm direct communication with the LDAP server.
 
 ```
-ldapsearch -x -H ldap://centos.armour.local -b "dc=rs,dc=local" "(uid=it1)"
+ldapsearch -x -H ldap://centos.armour.local -b "dc=armour,dc=local" "(uid=it1)"
 ```
 
 --------------------------------------------------------------------------------
@@ -866,7 +866,7 @@ sssctl config-check
 • Tests whether a specific user can authenticate directly to the LDAP server.
 
 ```
-ldapwhoami -x -D "uid=it1,ou=it,dc=rs,dc=local" -W -H ldap://centos.armour.local
+ldapwhoami -x -D "uid=it1,ou=it,dc=armour,dc=local" -W -H ldap://centos.armour.local
 ```
 
 ---
